@@ -1,0 +1,80 @@
+---
+x-group-web: &group-web Web Services
+x-group-docker: &group-docker Docker Registries
+x-group-code: &group-code Code Repositories
+
+x-interval: &default-interval 3m
+x-http-conditions: &http-conditions
+  - "[STATUS] == 200"
+  - "[RESPONSE_TIME] < 750"
+x-dns-server: &dns-server "8.8.8.8"
+
+endpoints:
+
+  - name: Website
+    group: *group-web
+    url: https://www.sommerfeld.io
+    interval: *default-interval
+    conditions: *http-conditions
+
+  - name: Website DNS
+    group: *group-web
+    url: *dns-server
+    interval: *default-interval
+    dns:
+      query-name: "sommerfeld.io"
+      query-type: "A"
+    conditions:
+      - "[DNS_RCODE] == NOERROR"
+
+  - name: Docs Page - configs-homelab
+    group: *group-web
+    url: https://sommerfeld-io.github.io/configs-homelab
+    interval: *default-interval
+    conditions: *http-conditions
+
+  - name: Docs Page - container-images
+    group: *group-web
+    url: https://sommerfeld-io.github.io/container-images
+    interval: *default-interval
+    conditions: *http-conditions
+
+  - name: Docs Page - inspec-profiles
+    group: *group-web
+    url: https://sommerfeld-io.github.io/inspec-profiles
+    interval: *default-interval
+    conditions: *http-conditions
+
+  # ---------------------------------------------------------------------------
+
+  - name: DockerHub - sommerfeldio/devcontainer
+    group: *group-docker
+    url: https://hub.docker.com/r/sommerfeldio/devcontainer
+    interval: *default-interval
+    conditions: *http-conditions
+
+  - name: DockerHub - sommerfeldio/ftp-client
+    group: *group-docker
+    url: https://hub.docker.com/r/sommerfeldio/ftp-client
+    interval: *default-interval
+    conditions: *http-conditions
+
+  - name: DockerHub - sommerfeldio/folderslint
+    group: *group-docker
+    url: https://hub.docker.com/r/sommerfeldio/folderslint
+    interval: *default-interval
+    conditions: *http-conditions
+
+  - name: DockerHub - sommerfeldio/mkdocs
+    group: *group-docker
+    url: https://hub.docker.com/r/sommerfeldio/mkdocs
+    interval: *default-interval
+    conditions: *http-conditions
+
+  # ---------------------------------------------------------------------------
+
+  - name: GitHub
+    group: *group-code
+    url: https://www.github.com
+    interval: *default-interval
+    conditions: *http-conditions

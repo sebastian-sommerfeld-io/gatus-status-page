@@ -1,0 +1,10 @@
+---
+services:
+
+  gatus:
+    container_name: ${COMPOSE_PROJECT_NAME}-gatus
+    image: ghcr.io/twin/gatus:v5.17.0 # Alternative: https://hub.docker.com/r/twinproduction/gatus
+    ports:
+      - 8080:8080
+    volumes:
+      - ./config:/config

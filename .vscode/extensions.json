@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "GitHub.copilot",
+        "DavidAnson.vscode-markdownlint",
+        "EditorConfig.EditorConfig",
+        "task.vscode-task"
+    ]
+}
