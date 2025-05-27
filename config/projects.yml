@@ -1,0 +1,87 @@
+---
+x-group-container-images: &group-container-images Project - Container Images
+x-group-configs-homelab: &group-configs-homelab Project - Configs Homelab
+x-group-inspec-profiles: &group-inspec-profiles Project - InSpec Profiles
+
+x-interval: &default-interval 3m
+
+x-http-conditions: &http-conditions
+  - "[STATUS] == 200"
+  - "[RESPONSE_TIME] < 750"
+x-conditions: &pipeline-conditions
+  - "[STATUS] == 200"
+  - "len([BODY].workflow_runs) > 0"
+  - "[BODY].workflow_runs[0].conclusion == success"
+
+x-dns-server: &dns-server "8.8.8.8"
+
+endpoints:
+
+  - name: GitHub Actions Workflow - Commit + Test
+    group: *group-container-images
+    url: "https://api.github.com/repos/sommerfeld-io/container-images/actions/runs?branch=main&workflow_id=pipeline.yml"
+    method: GET
+    interval: *default-interval
+    conditions: *pipeline-conditions
+
+  - name: GitHub Actions Workflow - Release
+    group: *group-container-images
+    url: "https://api.github.com/repos/sommerfeld-io/container-images/actions/runs?branch=main&workflow_id=release.yml"
+    method: GET
+    interval: *default-interval
+    conditions: *pipeline-conditions
+
+  - name: GitHub Actions Workflow - Scan
+    group: *group-container-images
+    url: "https://api.github.com/repos/sommerfeld-io/container-images/actions/runs?branch=main&workflow_id=scan.yml"
+    method: GET
+    interval: *default-interval
+    conditions: *pipeline-conditions
+
+  - name: Docs Page
+    group: *group-container-images
+    url: https://sommerfeld-io.github.io/container-images
+    interval: *default-interval
+    conditions: *http-conditions
+
+  - name: DockerHub - sommerfeldio/devcontainer
+    group: *group-container-images
+    url: https://hub.docker.com/r/sommerfeldio/devcontainer
+    interval: *default-interval
+    conditions: *http-conditions
+
+  - name: DockerHub - sommerfeldio/ftp-client
+    group: *group-container-images
+    url: https://hub.docker.com/r/sommerfeldio/ftp-client
+    interval: *default-interval
+    conditions: *http-conditions
+
+  - name: DockerHub - sommerfeldio/folderslint
+    group: *group-container-images
+    url: https://hub.docker.com/r/sommerfeldio/folderslint
+    interval: *default-interval
+    conditions: *http-conditions
+
+  - name: DockerHub - sommerfeldio/mkdocs
+    group: *group-container-images
+    url: https://hub.docker.com/r/sommerfeldio/mkdocs
+    interval: *default-interval
+    conditions: *http-conditions
+
+  # ---------------------------------------------------------------------------
+
+  - name: Docs Page
+    group: *group-configs-homelab
+    url: https://sommerfeld-io.github.io/configs-homelab
+    interval: *default-interval
+    conditions: *http-conditions
+
+  # ---------------------------------------------------------------------------
+
+  - name: Docs Page
+    group: *group-inspec-profiles
+    url: https://sommerfeld-io.github.io/inspec-profiles
+    interval: *default-interval
+    conditions: *http-conditions
+
+

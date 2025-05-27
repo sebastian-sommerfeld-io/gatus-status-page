@@ -1,0 +1,12 @@
+---
+x-group-web: &group-web Websites
+
+endpoints:
+
+  - name: Website
+    group: *group-web
+    url: https://www.sommerfeld.io
+    interval: 5m
+    conditions:
+      - "[STATUS] == 200"
+      - "[RESPONSE_TIME] < 750"
